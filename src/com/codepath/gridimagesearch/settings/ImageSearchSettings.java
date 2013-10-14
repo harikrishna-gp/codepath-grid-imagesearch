@@ -14,6 +14,7 @@ import com.codepath.gridimagesearch.R;
 import com.codepath.gridimagesearch.settings.queries.BaseImageSearchQuery;
 import com.codepath.gridimagesearch.settings.queries.ImageColorFilterQuery;
 import com.codepath.gridimagesearch.settings.queries.ImageSizeSearchQuery;
+import com.codepath.gridimagesearch.settings.queries.QueryParameter;
 
 public class ImageSearchSettings extends Activity {
 
@@ -41,18 +42,20 @@ public class ImageSearchSettings extends Activity {
 	}
 
 	public void updateSettings(View v) {
-		ArrayList<String> params = new ArrayList<String>();
+		ArrayList<QueryParameter> params = new ArrayList<QueryParameter>();
 		
 		for (int i = 0; i < this.options.size(); i++) {
-			String param = this.options.get(i).getQueryParam();
-			if (param != "") {
-				params.add(param);
+			BaseImageSearchQuery option = this.options.get(i);
+			String key = option.queryParam;
+			String value = option.getCurSelected();
+			if (value != null) {
+				params.add(new QueryParameter(key, value));
 			}
 		}
 		
 		Toast.makeText(getBaseContext(), params.toString(), Toast.LENGTH_SHORT).show();
 		Intent data = new Intent();
-		data.putExtra("params", params.toString());
+		data.putExtra("params", params);
 		setResult(RESULT_OK, data);
 		finish();
 	}

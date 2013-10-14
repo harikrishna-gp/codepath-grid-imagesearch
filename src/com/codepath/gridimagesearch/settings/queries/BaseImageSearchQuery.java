@@ -3,25 +3,28 @@ package com.codepath.gridimagesearch.settings.queries;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 
-import com.codepath.gridimagesearch.R;
 import com.codepath.gridimagesearch.settings.ImageSettingOption;
 
 
 public class BaseImageSearchQuery implements OnItemSelectedListener {
 	public String title;
-	
 	public String queryParam;
 	private String curSelected;
 	
 	public ArrayList<ImageSettingOption> imageSettingOptions;
 	
 	public String toString() {
-		return this.getQueryParam();
+		String value = this.getCurSelected();
+		if (value != null) {
+			return this.queryParam + "=" + this.getCurSelected();
+		}
+		else {
+			return this.queryParam;
+		}
 	}
 	
 	public void setSelected(Integer id) {
@@ -47,15 +50,6 @@ public class BaseImageSearchQuery implements OnItemSelectedListener {
 		this.clearSelected();
 	}
 	
-	public String getQueryParam() { 
-		String value = this.getCurSelected();
-		if (value != null) {
-			return this.queryParam + "=" + this.getCurSelected();
-		}
-		else {
-			return "";
-		}
-	}
 	
 	public ArrayList<ImageSettingOption> getOptions() {
 		return this.imageSettingOptions;

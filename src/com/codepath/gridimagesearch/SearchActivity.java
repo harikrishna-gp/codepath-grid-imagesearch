@@ -98,7 +98,7 @@ public class SearchActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	  if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-	     Toast.makeText(this, "Got here" + data.getExtras().getString("params"),
+	     Toast.makeText(this, "Got here" + data.getExtras().get("params"),
 	        Toast.LENGTH_SHORT).show();
 	  }
 	} 
