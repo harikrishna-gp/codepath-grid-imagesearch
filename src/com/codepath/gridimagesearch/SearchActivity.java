@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -20,9 +21,9 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.codepath.gridimagesearch.settings.ImageSearchSettings;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.image.SmartImage;
 
 public class SearchActivity extends Activity {
 
@@ -31,6 +32,7 @@ public class SearchActivity extends Activity {
 	Button btnSearch;
 	ArrayList<ImageResult> imageResults = new ArrayList<ImageResult>();
 	ImageResultArrayAdapter imageAdapter;
+	int REQUEST_CODE = 123;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,12 @@ public class SearchActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.search, menu);
 		return true;
+	}
+	
+	public boolean launchSettings(MenuItem item) {
+		  Intent i = new Intent(this, ImageSearchSettings.class);
+		  startActivityForResult(i, REQUEST_CODE);
+		  return true;
 	}
 
 	public void setUpViews() {
@@ -86,4 +94,12 @@ public class SearchActivity extends Activity {
 		}
 		});
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	  if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+	     Toast.makeText(this, "Got here" + data.getExtras().getString("params"),
+	        Toast.LENGTH_SHORT).show();
+	  }
+	} 
 }
