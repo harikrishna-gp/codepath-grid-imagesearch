@@ -2,7 +2,9 @@ package com.codepath.gridimagesearch.settings.queries;
 
 import java.io.Serializable;
 
-public class QueryParameter implements Serializable{
+import org.apache.http.NameValuePair;
+
+public class QueryParameter implements NameValuePair, Serializable{
 	/**
 	 * 
 	 */
@@ -23,4 +25,14 @@ public class QueryParameter implements Serializable{
 		return this.key + "=" + this.value;
 	}
 	
+	@Override
+	public String getName() {
+		return this.key;
+	}
+
+	@Override
+	public String getValue() {
+		return this.value;
+	}
+
 }
