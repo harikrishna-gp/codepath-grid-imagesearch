@@ -189,6 +189,8 @@ public class SearchActivity extends Activity {
 			ArrayList<QueryParameter> params = (ArrayList<QueryParameter>) data
 					.getExtras().get("params");
 
+			setDefaultParams();
+			
 			for (QueryParameter param : params) {
 				queryParameters.put(param.getName(), param.getValue());
 			}
