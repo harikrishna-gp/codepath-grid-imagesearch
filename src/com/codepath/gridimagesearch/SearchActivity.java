@@ -56,7 +56,7 @@ public class SearchActivity extends Activity {
 		gvResults.setAdapter(imageAdapter);
 		
 		clearResults();
-		
+
 		gvResults.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapter, View parent,
@@ -69,6 +69,8 @@ public class SearchActivity extends Activity {
 				startActivity(i);
 			}
 		});
+		
+		setUpScrolling();
 	}
 
 	@Override
@@ -91,7 +93,6 @@ public class SearchActivity extends Activity {
 	}
 	
 	public void setUpScrolling() {
-		gvResults.setOnScrollListener(null);
 		gvResults.setOnScrollListener(new EndlessScrollListener() {
 
 			@Override
@@ -101,6 +102,7 @@ public class SearchActivity extends Activity {
 				SearchActivity.this.loadSearch();
 			}
 			
+			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
 			    
 			}
@@ -110,7 +112,6 @@ public class SearchActivity extends Activity {
 	public void clearResults() {
 		imageAdapter.clear();
 		queryParameters.put("start", "0");
-		setUpScrolling();
 	}
 	
 	public void setDefaultParams() {
