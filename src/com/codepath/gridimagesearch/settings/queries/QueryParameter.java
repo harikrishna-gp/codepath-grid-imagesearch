@@ -4,11 +4,14 @@ import java.io.Serializable;
 
 import org.apache.http.NameValuePair;
 
-public class QueryParameter implements NameValuePair, Serializable{
+public class QueryParameter implements NameValuePair, Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -4014555903428068508L;
+	private static final long serialVersionUID = -7258554739107678197L;
+	/**
+	 * 
+	 */
 	public String key;
 	public String value;	
 
@@ -18,10 +21,6 @@ public class QueryParameter implements NameValuePair, Serializable{
 	}
 	
 	public String toString() {
-		return this.getQueryParam();
-	}
-	
-	public String getQueryParam() { 
 		return this.key + "=" + this.value;
 	}
 	

@@ -1,6 +1,8 @@
 package com.codepath.gridimagesearch;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.json.JSONArray;
@@ -15,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -33,17 +36,23 @@ public class SearchActivity extends Activity {
 	GridView gvResults;
 	Button btnSearch;
 	ArrayList<ImageResult> imageResults = new ArrayList<ImageResult>();
-	ArrayList<QueryParameter> defaultParameters = new ArrayList<QueryParameter>();
-	ArrayList<QueryParameter> queryParameters = new ArrayList<QueryParameter>();
+
+	HashMap<String, String> queryParameters = new HashMap<String, String>();
 
 	ImageResultArrayAdapter imageAdapter;
+	String query;
+	
 	int REQUEST_CODE = 123;
-
+	int NUM_PER_PAGE = 8;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
 		setUpViews();
+		setDefaultParams();
+		clearResults();
+
 		imageAdapter = new ImageResultArrayAdapter(this, imageResults);
 		gvResults.setAdapter(imageAdapter);
 		gvResults.setOnItemClickListener(new OnItemClickListener() {
@@ -58,9 +67,24 @@ public class SearchActivity extends Activity {
 				startActivity(i);
 			}
 		});
-		defaultParameters.add(new QueryParameter("rsz", "8"));
-		defaultParameters.add(new QueryParameter("start", "0"));
-		defaultParameters.add(new QueryParameter("v", "1.0"));
+		gvResults.setOnScrollListener(new EndlessScrollListener() {
+
+			int currentScrollState;
+			 
+			@Override
+			public void loadMore(int page, int totalItemsCount) {
+				Log.d("DEBUG", "Scroll loading page " + page);
+				queryParameters.put("start", String.valueOf((page + 1) * NUM_PER_PAGE));
+				SearchActivity.this.loadSearch();
+			}
+			
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+			    
+			}
+
+			public void reset() {
+			}
+		});
 	}
 
 	@Override
@@ -82,39 +106,75 @@ public class SearchActivity extends Activity {
 		btnSearch = (Button) findViewById(R.id.btnSearch);
 	}
 
-	public void onImageSearch(View v) {
-		String query = etQuery.getText().toString();
-		Toast.makeText(this, "Searching for " + query, Toast.LENGTH_SHORT)
-				.show();
+	public void clearResults() {
+		imageResults.clear();
+		queryParameters.put("start", "0");
+	}
+	public void setDefaultParams() {
+		queryParameters.clear();
+		queryParameters.put("rsz", String.valueOf(NUM_PER_PAGE));
+		queryParameters.put("v", "1.0");
+	}
+
+	public String getQueryParams() {
+		ArrayList<QueryParameter> namedValuePairs = new ArrayList<QueryParameter>();
+
+		Iterator<String> iter = queryParameters.keySet().iterator();
+
+		while (iter.hasNext()) {
+			String key = iter.next();
+			namedValuePairs.add(new QueryParameter(key, queryParameters
+					.get(key)));
+		}
+
+		String params = URLEncodedUtils.format(namedValuePairs, "UTF-8");
+		return params;
+	}
+
+	public void loadSearch() {
 		AsyncHttpClient client = new AsyncHttpClient();
 
 		// ajax.googleapis.com/ajax/services/search/images?q=Android&v=1.0
-		String baseUrl = "https://ajax.googleapis.com/ajax/services/search/images?";
-		String defaultParams = URLEncodedUtils.format(defaultParameters,
-				"UTF-8");
-		String queryParams = URLEncodedUtils.format(queryParameters, "UTF-8");
+		String baseUrl = "https://ajax.googleapis.com/ajax/services/search/images";
 
-		String url = baseUrl + defaultParams + "&" + queryParams + "&q="
-				+ Uri.encode(query);
-		
+		queryParameters.put("q", Uri.encode(query));
+		String params = this.getQueryParams();
+		String url = baseUrl + "?" + params;
+
 		Log.d("DEBUG", "Searching for " + url);
 
 		client.get(url, new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(JSONObject response) {
 				JSONArray imageJsonResults = null;
-				try {
-					imageJsonResults = response.getJSONObject("responseData")
-							.getJSONArray("results");
-					imageResults.clear();
-					imageAdapter.addAll(ImageResult
-							.fromJSONArray(imageJsonResults));
-					Log.d("DEBUG", imageResults.toString());
+				try {				
+					if (response.get("responseData") != JSONObject.NULL) {
+					  JSONObject responseData = response.getJSONObject("responseData");
+  					  imageJsonResults = responseData.getJSONArray("results");
+					  imageAdapter.addAll(ImageResult
+							  .fromJSONArray(imageJsonResults));
+					}
+					else {
+						Log.d("debug", "No response made from API call -- possible max reached");
+					}
+					//Log.d("DEBUG", imageResults.toString());
 				} catch (JSONException e) {
-					e.printStackTrace();
+					String stackTrace = Log.getStackTraceString(e);
+					Log.d("debug", stackTrace);
 				}
 			}
+			
 		});
+	}
+
+	public void onImageSearch(View v) {
+		clearResults();
+		
+		query = etQuery.getText().toString();
+		Toast.makeText(this, "Searching for " + query, Toast.LENGTH_SHORT)
+				.show();
+
+		this.loadSearch();
 	}
 
 	@Override
@@ -122,9 +182,14 @@ public class SearchActivity extends Activity {
 	// / better way?
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-			queryParameters = (ArrayList<QueryParameter>) data.getExtras().get(
-					"params");
-			String x = URLEncodedUtils.format(queryParameters, "UTF-8");
+			ArrayList<QueryParameter> params = (ArrayList<QueryParameter>) data
+					.getExtras().get("params");
+
+			for (QueryParameter param : params) {
+				queryParameters.put(param.getName(), param.getValue());
+			}
+
+			String x = URLEncodedUtils.format(params, "UTF-8");
 			Toast.makeText(this, "Got here" + x, Toast.LENGTH_SHORT).show();
 		}
 	}
