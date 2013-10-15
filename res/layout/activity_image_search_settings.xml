@@ -23,16 +23,37 @@
         android:layout_below="@+id/textView1"
         android:layout_marginTop="35dp"
         android:divider="@null" >
-
     </ListView>
+
+    <LinearLayout
+        android:id="@+id/siteSearchLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/settingView"
+        android:gravity="left"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/site_filter" />
+
+        <EditText
+            android:id="@+id/siteSearch"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="46dp"
+            android:hint="@string/site_hint"/>
+        
+    </LinearLayout>
 
     <Button
         android:id="@+id/button1"
-        android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/settingView"
-        android:text="@string/save"
-        android:onClick="updateSettings" />
+        android:layout_below="@+id/siteSearchLayout"
+        android:layout_centerHorizontal="true"
+        android:onClick="updateSettings"
+        android:text="@string/save" />
 
 </RelativeLayout>

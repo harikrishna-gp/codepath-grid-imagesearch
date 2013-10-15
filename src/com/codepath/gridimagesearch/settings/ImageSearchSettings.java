@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -53,6 +54,11 @@ public class ImageSearchSettings extends Activity {
 			if (value != null) {
 				params.add(new QueryParameter(key, value));
 			}
+		}
+		
+		String siteSearchText = ((EditText) findViewById(R.id.siteSearch)).getText().toString();
+		if (siteSearchText != null && siteSearchText.length() != 0) {
+			params.add(new QueryParameter("sitesearch", siteSearchText));
 		}
 		
 		Toast.makeText(getBaseContext(), params.toString(), Toast.LENGTH_SHORT).show();

@@ -42,7 +42,9 @@ public class BaseImageSearchQuery implements OnItemSelectedListener {
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View v, int position,
 			long rowId) {
-		this.setSelected(position + OFFSET);
+		if (position > 0) {
+  		  this.setSelected(position);
+		}
 	}
 
 	@Override
