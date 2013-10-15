@@ -51,10 +51,12 @@ public class SearchActivity extends Activity {
 		setContentView(R.layout.activity_search);
 		setUpViews();
 		setDefaultParams();
-		clearResults();
 
 		imageAdapter = new ImageResultArrayAdapter(this, imageResults);
 		gvResults.setAdapter(imageAdapter);
+		
+		clearResults();
+		
 		gvResults.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapter, View parent,
@@ -65,24 +67,6 @@ public class SearchActivity extends Activity {
 						ImageDisplayActivity.class);
 				i.putExtra("result", imageInfo);
 				startActivity(i);
-			}
-		});
-		gvResults.setOnScrollListener(new EndlessScrollListener() {
-
-			int currentScrollState;
-			 
-			@Override
-			public void loadMore(int page, int totalItemsCount) {
-				Log.d("DEBUG", "Scroll loading page " + page);
-				queryParameters.put("start", String.valueOf((page + 1) * NUM_PER_PAGE));
-				SearchActivity.this.loadSearch();
-			}
-			
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-			    
-			}
-
-			public void reset() {
 			}
 		});
 	}
@@ -105,11 +89,30 @@ public class SearchActivity extends Activity {
 		gvResults = (GridView) findViewById(R.id.gvResults);
 		btnSearch = (Button) findViewById(R.id.btnSearch);
 	}
+	
+	public void setUpScrolling() {
+		gvResults.setOnScrollListener(null);
+		gvResults.setOnScrollListener(new EndlessScrollListener() {
+
+			@Override
+			public void loadMore(int page, int totalItemsCount) {
+				Log.d("DEBUG", "Scroll loading page " + page);
+				queryParameters.put("start", String.valueOf((page) * NUM_PER_PAGE));
+				SearchActivity.this.loadSearch();
+			}
+			
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+			    
+			}
+		});
+	}
 
 	public void clearResults() {
-		imageResults.clear();
+		imageAdapter.clear();
 		queryParameters.put("start", "0");
+		setUpScrolling();
 	}
+	
 	public void setDefaultParams() {
 		queryParameters.clear();
 		queryParameters.put("rsz", String.valueOf(NUM_PER_PAGE));
@@ -179,7 +182,7 @@ public class SearchActivity extends Activity {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	// / better way?
+	// better way?
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
 			ArrayList<QueryParameter> params = (ArrayList<QueryParameter>) data
@@ -190,7 +193,7 @@ public class SearchActivity extends Activity {
 			}
 
 			String x = URLEncodedUtils.format(params, "UTF-8");
-			Toast.makeText(this, "Got here" + x, Toast.LENGTH_SHORT).show();
+			Log.d("debug", "Got here" + x);
 		}
 	}
 }
