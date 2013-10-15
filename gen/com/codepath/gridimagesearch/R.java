@@ -11,6 +11,7 @@ public final class R {
     public static final class array {
         public static final int color_filter_array=0x7f040001;
         public static final int image_size_array=0x7f040000;
+        public static final int image_type_array=0x7f040002;
     }
     public static final class attr {
     }
@@ -60,8 +61,9 @@ public final class R {
         public static final int color_filter=0x7f060009;
         public static final int hello_world=0x7f060002;
         public static final int image_size=0x7f060008;
+        public static final int image_type=0x7f06000a;
         public static final int query_hint=0x7f060004;
-        public static final int save=0x7f06000a;
+        public static final int save=0x7f06000b;
         public static final int search=0x7f060003;
         public static final int title_activity_image_display=0x7f060005;
         public static final int title_activity_image_search_settings=0x7f060006;

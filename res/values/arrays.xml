@@ -19,6 +19,12 @@
         <item>teal</item>
         <item>white</item>
         <item>yellow</item>
-        
     </string-array>
+    <string-array name="image_type_array">
+        <item>face</item>
+        <item>photo</item>
+        <item>clipart</item>
+        <item>lineart</item>
+    </string-array>
+    
 </resources>

@@ -12,8 +12,9 @@ import android.widget.Toast;
 
 import com.codepath.gridimagesearch.R;
 import com.codepath.gridimagesearch.settings.queries.BaseImageSearchQuery;
-import com.codepath.gridimagesearch.settings.queries.ImageColorFilterQuery;
+import com.codepath.gridimagesearch.settings.queries.ImageColorSearchQuery;
 import com.codepath.gridimagesearch.settings.queries.ImageSizeSearchQuery;
+import com.codepath.gridimagesearch.settings.queries.ImageTypeSearchQuery;
 import com.codepath.gridimagesearch.settings.queries.QueryParameter;
 
 public class ImageSearchSettings extends Activity {
@@ -35,7 +36,8 @@ public class ImageSearchSettings extends Activity {
 		this.options = new ArrayList<BaseImageSearchQuery>();
 
 		this.options.add(new ImageSizeSearchQuery(this));
-		this.options.add(new ImageColorFilterQuery(this));
+		this.options.add(new ImageColorSearchQuery(this));
+		this.options.add(new ImageTypeSearchQuery(this));
 
 		adapter = new ImageSettingArrayAdapter(this, options);
 		lv.setAdapter(adapter);

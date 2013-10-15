@@ -14,7 +14,7 @@ public class BaseImageSearchQuery implements OnItemSelectedListener {
 	public String title;
 	public String queryParam;
 	private String curSelected;
-	
+	int OFFSET = 1; /* Allow blank selections */
 	public ArrayList<ImageSettingOption> imageSettingOptions;
 	
 	public String toString() {
@@ -42,7 +42,7 @@ public class BaseImageSearchQuery implements OnItemSelectedListener {
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View v, int position,
 			long rowId) {
-		this.setSelected(position);
+		this.setSelected(position + OFFSET);
 	}
 
 	@Override
@@ -72,6 +72,8 @@ public class BaseImageSearchQuery implements OnItemSelectedListener {
 		String[] imageItems = this.convertFrom(context, stringArrayId);
 		
 		imageSettingOptions = new ArrayList<ImageSettingOption>();
+		
+		imageSettingOptions.add(new ImageSettingOption("", ""));
 		
 		for (int i = 0; i < imageItems.length; i++)
 		{

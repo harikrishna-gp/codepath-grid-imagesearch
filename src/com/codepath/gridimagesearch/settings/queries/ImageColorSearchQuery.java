@@ -10,9 +10,9 @@ import android.content.Context;
 import android.content.res.Resources;
 
 
-public class ImageColorFilterQuery extends BaseImageSearchQuery {
+public class ImageColorSearchQuery extends BaseImageSearchQuery {
 		
-	public ImageColorFilterQuery(Context context) {
+	public ImageColorSearchQuery(Context context) {
 		super(context, R.array.color_filter_array, R.string.color_filter);
 		this.queryParam = "imgcolor";
 		
